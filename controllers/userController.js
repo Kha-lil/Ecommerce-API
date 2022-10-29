@@ -1,7 +1,7 @@
 const User = require("../models/User");
 const CustomError = require("../errors");
 const { StatusCodes } = require("http-status-codes");
-const { attachCookiesToResponse, createTokenUser } = require("../utils");
+const { attachCookiesToResponse, createTokenUser,checkPermissions } = require("../utils");
 
 const getAllUsers = async (req, res) => {
   const users = await User.find({ role: "user" }).select("-password");
@@ -18,7 +18,7 @@ const getSingleUser = async (req, res) => {
     );
   }
 
-  chechPermissions(req.user, user._id);
+  checkPermissions(req.user, user._id);
   res.status(StatusCodes.OK).json({ user });
 };
 
