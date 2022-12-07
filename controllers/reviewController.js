@@ -20,7 +20,10 @@ const createReview = async (req, res) => {
 };
 
 const getAllReviews = async (req, res) => {
-  const reviews = await Review.find({});
+  const reviews = await Review.find({}).populate({
+    path: "product",
+    select: "name company price",
+  });
   res.status(StatusCodes.CREATED).json({ reviews, count: reviews.length });
 };
 
@@ -64,12 +67,18 @@ const updateReview = async (req, res) => {
 const deleteReview = async (req, res) => {
   const { id: _id } = req.params;
   const review = await Review.findById({ _id });
-  if(!review){
-    throw new CustomError.NotFoundError('Review does not exist')
+  if (!review) {
+    throw new CustomError.NotFoundError("Review does not exist");
   }
-  checkPermissions(req.user, review.user)
-  await review.remove()
+  checkPermissions(req.user, review.user);
+  await review.remove();
   res.status(StatusCodes.OK).json({});
+};
+
+const getSingleProductReviews = async (req, res) => {
+  const { id: productId } = req.params;
+  const reviews = await Review.find({ product: productId });
+  res.status(StatusCodes.OK).json({ reviews, count: reviews.length });
 };
 
 const checkIfProductExists = async (productId) => {
@@ -98,4 +107,5 @@ module.exports = {
   getSingleReview,
   updateReview,
   deleteReview,
+  getSingleProductReviews,
 };
