@@ -16,7 +16,7 @@ userRouter
   .route("/")
   .get(authenticateUser, authorizePermissions("admin"), getAllUsers);
 userRouter.route("/showMe").get(authenticateUser, showCurrentUser);
-userRouter.route("/updateUser").patch(updateUser);
+userRouter.route("/updateUser").patch(authenticateUser, updateUser);
 userRouter.route("/updateUserPassword").patch(authenticateUser, updateUserPassword);
 
 userRouter.route("/:id").get(authenticateUser, getSingleUser);
