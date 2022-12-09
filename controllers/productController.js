@@ -16,7 +16,7 @@ const getAllProducts = async (req, res) => {
 
 const getSingleProduct = async (req, res) => {
   const { id: _id } = req.params;
-  const product = await Product.findById({ _id });
+  const product = await Product.findById({ _id }).populate('reviews');
   if (!product) {
     throw new CustomError.NotFoundError(`Can't find product with id:${_id}`);
   }
